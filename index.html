@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barbería Aesthetic - Reservas</title>
+    <title>Luxury Style - Reservas</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
@@ -19,7 +19,6 @@
             margin: 0;
             padding: 0;
             color: #fff;
-            /* Fondo Aesthetic de Barbería */
             background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
                 url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
@@ -79,10 +78,6 @@
             outline: none;
         }
 
-        input:focus {
-            border-color: var(--accent);
-        }
-
         .grid-horarios {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -122,7 +117,6 @@
             font-weight: bold;
             cursor: pointer;
             font-size: 1rem;
-            letter-spacing: 1px;
             transition: 0.3s;
         }
 
@@ -131,7 +125,6 @@
             transform: translateY(-2px);
         }
 
-        /* MODAL ÉXITO */
         #mensajeExito {
             display: none;
             position: fixed;
@@ -160,7 +153,6 @@
             margin-bottom: 15px;
         }
 
-        /* FOOTER */
         footer {
             background: rgba(0, 0, 0, 0.9);
             color: white;
@@ -204,7 +196,7 @@
 
     <div class="main-content">
         <div class="container">
-            <h2>Reservar Turno</h2>
+            <h2>Luxury Style</h2>
             <form id="reservaForm">
                 <label>Nombre Completo</label>
                 <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
@@ -214,10 +206,10 @@
 
                 <label>Servicio</label>
                 <select id="servicioSelector" required>
-                    <option value="">Cargando precios...</option>
+                    <option value="">Cargando servicios...</option>
                 </select>
 
-                <label>Fecha</label>
+                <label>Día</label>
                 <select id="fechaSelector" required>
                     <option value="">-- Elige un día --</option>
                 </select>
@@ -240,14 +232,13 @@
             </div>
             <div class="footer-section">
                 <h4>Ubicación</h4>
-                <p>Calle Falsa 123, Barrio Aesthetic<br>Tu Ciudad, CP 0000</p>
-                <a href="#" target="_blank" style="color:var(--accent); font-size:0.8rem;">Google Maps</a>
+                <p>Calle Falsa 123, Luxury Style<br>Tu Ciudad, CP 0000</p>
             </div>
             <div class="footer-section">
                 <h4>Contacto</h4>
                 <div class="social-links">
                     <a href="#">Instagram</a>
-                    <a href="#">WhatsApp</a>
+                    <a href="https://wa.me/3445411318">WhatsApp</a>
                 </div>
             </div>
         </div>
@@ -256,8 +247,9 @@
     <div id="mensajeExito">
         <div class="modal-content">
             <div class="icon-check">✔</div>
-            <h2>¡Reserva Lista!</h2>
+            <h2>¡Reserva Exitosa!</h2>
             <p id="resumenCita"></p>
+            <p>Se ha enviado un correo con los detalles y tu código de cliente.</p>
             <button class="btn-enviar" onclick="location.reload()">Cerrar</button>
         </div>
     </div>
@@ -287,7 +279,6 @@
 
         const horariosBase = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20"];
 
-        // Precios Dinámicos
         onValue(ref(db, 'configuracion/precios'), (snap) => {
             const p = snap.val() || { pelo: 0, barba: 0, promo: 0 };
             servicioSelector.innerHTML = `
@@ -298,7 +289,6 @@
             `;
         });
 
-        // Generar días
         const cargarSemana = () => {
             const hoy = new Date();
             const lunes = new Date(hoy);
@@ -341,17 +331,27 @@
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
             const servicio = servicioSelector.value;
+            const codigo = Math.floor(1000 + Math.random() * 9000); // Código aleatorio
 
             btnConfirmar.disabled = true;
 
             try {
+                // Guardar en Firebase
                 await set(ref(db, `reservas/${fecha}/${horaSeleccionada.replace(':', '')}`), {
-                    cliente: nombre, email: email, hora: horaSeleccionada, servicio: servicio
+                    cliente: nombre, email: email, hora: horaSeleccionada, servicio: servicio, codigo: codigo
                 });
 
-                await emailjs.send('service_qxgh4af', 'template_uz38qwe', {
-                    to_name: nombre, to_email: email, fecha_reserva: fecha, hora_reserva: horaSeleccionada, servicio_elegido: servicio
-                });
+                // Enviar EmailJS con las variables de tu plantilla
+                const templateParams = {
+                    user_name: nombre,      // {{user_name}}
+                    to_email: email,       // Configurar en EmailJS Settings
+                    fecha: fecha,           // {{fecha}}
+                    hora: horaSeleccionada, // {{hora}}
+                    servicio: servicio,     // {{servicio}}
+                    codigo_cliente: codigo  // {{codigo_cliente}}
+                };
+
+                await emailjs.send('service_qxgh4af', 'template_uz38qwe', templateParams);
 
                 document.getElementById('resumenCita').innerHTML = `Turno para <b>${servicio}</b> agendado el <b>${fecha}</b> a las <b>${horaSeleccionada}</b>.`;
                 document.getElementById('mensajeExito').style.display = 'flex';
