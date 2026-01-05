@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Peluquería</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .admin-card {
+            background: white;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1a1a1a;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+        }
+
+        .dia-seccion {
+            margin-top: 30px;
+        }
+
+        .dia-titulo {
+            background: #1a1a1a;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-transform: capitalize;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .hora {
+            font-weight: bold;
+            color: #d4af37;
+            width: 80px;
+        }
+
+        .no-citas {
+            color: #999;
+            font-style: italic;
+            padding: 10px;
+        }
+
+        /* Estilo para el botón eliminar */
+        .btn-eliminar {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-card">
+        <h1>Agenda de Citas</h1>
+        <div id="contenedor-agenda">Cargando citas...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // Importamos 'remove' para poder borrar datos
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
+            authDomain: "peluqueria-3cfca.firebaseapp.com",
+            databaseURL: "https://peluqueria-3cfca-default-rtdb.firebaseio.com",
+            projectId: "peluqueria-3cfca",
+            storageBucket: "peluqueria-3cfca.firebasestorage.app",
+            messagingSenderId: "918388907412",
+            appId: "1:918388907412:web:cd0698e4e2745126398381",
+            measurementId: "G-EWX4G5JNF8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const contenedor = document.getElementById('contenedor-agenda');
+
+        const reservasRef = ref(db, 'reservas');
+
+        onValue(reservasRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                contenedor.innerHTML = "<p class='no-citas'>No hay reservas registradas todavía.</p>";
+                return;
+            }
+            renderizarAgenda(data);
+        });
+
+        // Función para eliminar cita
+        window.eliminarCita = (fecha, horaKey) => {
+            if (confirm(`¿Estás seguro de que quieres eliminar la cita de las ${horaKey}?`)) {
+                // Ruta exacta del nodo a eliminar: reservas/2023-10-25/09:00
+                const citaRef = ref(db, `reservas/${fecha}/${horaKey}`);
+                remove(citaRef)
+                    .then(() => alert("Cita eliminada correctamente"))
+                    .catch((error) => console.error("Error al eliminar:", error));
+            }
+        };
+
+        function renderizarAgenda(data) {
+            contenedor.innerHTML = '';
+            const fechasOrdenadas = Object.keys(data).sort();
+
+            fechasOrdenadas.forEach(fecha => {
+                const seccion = document.createElement('div');
+                seccion.className = 'dia-seccion';
+
+                const fechaObj = new Date(fecha + "T00:00:00");
+                const fechaTexto = fechaObj.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+
+                let html = `<h3 class="dia-titulo">${fechaTexto}</h3>`;
+                html += `<table>
+                            <thead>
+                                <tr>
+                                    <th>Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Email</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                const turnos = data[fecha];
+                const horasOrdenadas = Object.keys(turnos).sort();
+
+                horasOrdenadas.forEach(h => {
+                    const cita = turnos[h];
+                    // El id de la hora se usa para saber qué borrar
+                    html += `<tr>
+                                <td class="hora">${cita.hora}</td>
+                                <td>${cita.cliente}</td>
+                                <td>${cita.email}</td>
+                                <td>
+                                    <button class="btn-eliminar" onclick="eliminarCita('${fecha}', '${h}')">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>`;
+                });
+
+                html += `</tbody></table>`;
+                seccion.innerHTML = html;
+                contenedor.appendChild(seccion);
+            });
+        }
+    </script>
+</body>
+
+</html>
