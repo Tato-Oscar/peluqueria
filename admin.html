@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Barbería</title>
+    <title>Admin - Luxury Style</title>
     <style>
         :root {
             --primary: #1a1a1a;
@@ -18,6 +18,39 @@
             padding: 20px;
         }
 
+        /* ESTILO DEL LOGIN */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+        }
+
+        .login-box {
+            text-align: center;
+            background: #222;
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid var(--accent);
+        }
+
+        .login-box input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+            width: 200px;
+            text-align: center;
+        }
+
+        /* ESTILOS DEL PANEL (Se mantienen los anteriores) */
         .card {
             background: white;
             max-width: 900px;
@@ -61,12 +94,6 @@
             text-align: left;
         }
 
-        th {
-            color: #888;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-        }
-
         .hora {
             font-weight: bold;
             color: var(--accent);
@@ -92,7 +119,7 @@
             font-size: 0.8rem;
         }
 
-        /* MODAL DE CONSULTA PERSONALIZADO */
+        /* MODAL DE ELIMINAR */
         #modalConfirm {
             display: none;
             position: fixed;
@@ -112,25 +139,38 @@
             border-radius: 15px;
             text-align: center;
             max-width: 350px;
+            color: #333;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="card">
-        <h2>Ajustes de Precios</h2>
-        <div class="price-inputs">
-            <input type="number" id="pPelo" placeholder="Precio Pelo">
-            <input type="number" id="pBarba" placeholder="Precio Barba">
-            <input type="number" id="pPromo" placeholder="Precio Promo">
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color:white; border:none;">Luxury Style Admin</h2>
+            <p>Ingresa la contraseña maestra</p>
+            <input type="password" id="pass-input" placeholder="Contraseña">
+            <br>
+            <button class="btn btn-save" onclick="checkPass()">ENTRAR</button>
         </div>
-        <button id="btnSavePrices" class="btn btn-save">GUARDAR PRECIOS EN LA WEB</button>
     </div>
 
-    <div class="card">
-        <h2>Agenda de Citas</h2>
-        <div id="agendaContent">Cargando...</div>
+    <div id="admin-content" style="display:none;">
+        <div class="card">
+            <h2>Ajustes de Precios</h2>
+            <div class="price-inputs">
+                <input type="number" id="pPelo" placeholder="Precio Pelo">
+                <input type="number" id="pBarba" placeholder="Precio Barba">
+                <input type="number" id="pPromo" placeholder="Precio Promo">
+            </div>
+            <button id="btnSavePrices" class="btn btn-save">ACTUALIZAR PRECIOS EN LA WEB</button>
+        </div>
+
+        <div class="card">
+            <h2>Agenda de Citas</h2>
+            <div id="agendaContent">Cargando...</div>
+        </div>
     </div>
 
     <div id="modalConfirm">
@@ -159,25 +199,63 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Precios
-        get(ref(db, 'configuracion/precios')).then(s => {
-            if (s.exists()) {
-                const v = s.val();
-                document.getElementById('pPelo').value = v.pelo;
-                document.getElementById('pBarba').value = v.barba;
-                document.getElementById('pPromo').value = v.promo;
+        // FUNCIÓN DE LOGIN
+        window.checkPass = () => {
+            const pass = document.getElementById('pass-input').value;
+            // CAMBIA "1234" POR LA CONTRASEÑA QUE TÚ QUIERAS
+            if (pass === "1234") {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                cargarDatos();
+            } else {
+                alert("Contraseña incorrecta");
             }
-        });
+        };
 
+        function cargarDatos() {
+            // Cargar Precios
+            get(ref(db, 'configuracion/precios')).then(s => {
+                if (s.exists()) {
+                    const v = s.val();
+                    document.getElementById('pPelo').value = v.pelo;
+                    document.getElementById('pBarba').value = v.barba;
+                    document.getElementById('pPromo').value = v.promo;
+                }
+            });
+
+            // Escuchar Agenda
+            onValue(ref(db, 'reservas'), (snap) => {
+                const data = snap.val();
+                const cont = document.getElementById('agendaContent');
+                if (!data) { cont.innerHTML = "No hay citas registradas."; return; }
+                cont.innerHTML = '';
+                Object.keys(data).sort().forEach(fecha => {
+                    let html = `<h3>${fecha}</h3><table><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Código</th><th>Acción</th></tr>`;
+                    Object.keys(data[fecha]).sort().forEach(h => {
+                        const c = data[fecha][h];
+                        html += `<tr>
+                            <td class="hora">${c.hora}</td>
+                            <td>${c.cliente}</td>
+                            <td>${c.servicio || 'S/D'}</td>
+                            <td><b style="color:var(--success)">${c.codigo || '----'}</b></td>
+                            <td><button class="btn btn-del" onclick="askDelete('${fecha}','${h}')">Eliminar</button></td>
+                        </tr>`;
+                    });
+                    cont.innerHTML += html + '</table>';
+                });
+            });
+        }
+
+        // Guardar Precios
         document.getElementById('btnSavePrices').onclick = () => {
             set(ref(db, 'configuracion/precios'), {
                 pelo: document.getElementById('pPelo').value,
                 barba: document.getElementById('pBarba').value,
                 promo: document.getElementById('pPromo').value
-            }).then(() => alert("Precios actualizados"));
+            }).then(() => alert("¡Precios actualizados en la web!"));
         };
 
-        // Agenda
+        // Borrar Citas
         let refToDelete = null;
         window.askDelete = (f, h) => {
             refToDelete = ref(db, `reservas/${f}/${h}`);
@@ -190,22 +268,6 @@
                 closeModal();
             });
         };
-
-        onValue(ref(db, 'reservas'), (snap) => {
-            const data = snap.val();
-            const cont = document.getElementById('agendaContent');
-            if (!data) { cont.innerHTML = "No hay citas."; return; }
-            cont.innerHTML = '';
-            Object.keys(data).sort().forEach(fecha => {
-                let html = `<h3>${fecha}</h3><table><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Acción</th></tr>`;
-                Object.keys(data[fecha]).sort().forEach(h => {
-                    const c = data[fecha][h];
-                    html += `<tr><td class="hora">${c.hora}</td><td>${c.cliente}</td><td>${c.servicio || 'S/D'}</td>
-                    <td><button class="btn btn-del" onclick="askDelete('${fecha}','${h}')">Eliminar</button></td></tr>`;
-                });
-                cont.innerHTML += html + '</table>';
-            });
-        });
     </script>
 </body>
 

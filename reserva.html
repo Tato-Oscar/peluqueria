@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Style - Reservas</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --accent: #d4af37;
+            --bg-overlay: rgba(0, 0, 0, 0.75);
+            --success: #28a745;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+                url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 450px;
+            color: #333;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .grid-horarios {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .hora-btn {
+            padding: 12px 5px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .hora-btn.selected {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .hora-btn:disabled {
+            background: #eee;
+            color: #bbb;
+            cursor: not-allowed;
+        }
+
+        .btn-enviar {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        #mensajeExito {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            color: #333;
+        }
+
+        .icon-check {
+            font-size: 60px;
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-top: 1px solid var(--accent);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-section p {
+            font-size: 0.9rem;
+            color: #bbb;
+            line-height: 1.8;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 2px;
+        }
+
+        /* ESTILO PARA EL ACCESO OCULTO */
+        .admin-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+
+        .admin-link:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-content">
+        <div class="container">
+            <h2>Luxury Style</h2>
+            <form id="reservaForm">
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
+
+                <label>Tu Correo</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+
+                <label>Servicio</label>
+                <select id="servicioSelector" required>
+                    <option value="">Cargando servicios...</option>
+                </select>
+
+                <label>Día</label>
+                <select id="fechaSelector" required>
+                    <option value="">-- Elige un día --</option>
+                </select>
+
+                <div id="areaHorarios" style="display:none;">
+                    <label>Horas Disponibles</label>
+                    <div id="gridHorarios" class="grid-horarios"></div>
+                </div>
+
+                <button type="submit" id="btnConfirmar" class="btn-enviar" disabled>CONFIRMAR CITA</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h4>Horarios</h4>
+                <p>Lunes a Viernes<br>09:00 - 11:30 | 16:00 - 20:00</p>
+            </div>
+            <div class="footer-section">
+                <h4>Ubicación</h4>
+                <p>Calle Falsa 123<br>Tu Ciudad, CP 0000</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="https://wa.me/3445411318">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="mensajeExito">
+        <div class="modal-content">
+            <div class="icon-check">✔</div>
+            <h2>¡Reserva Exitosa!</h2>
+            <p id="resumenCita"></p>
+            <p>Se ha enviado un correo con los detalles y tu código de cliente.</p>
+            <button class="btn-enviar" onclick="location.reload()">Cerrar</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
+            authDomain: "peluqueria-3cfca.firebaseapp.com",
+            databaseURL: "https://peluqueria-3cfca-default-rtdb.firebaseio.com",
+            projectId: "peluqueria-3cfca",
+            storageBucket: "peluqueria-3cfca.firebasestorage.app",
+            appId: "1:918388907412:web:cd0698e4e2745126398381"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        emailjs.init("n8ZeBvsOy2XMsQeBI");
+
+        const fechaSelector = document.getElementById('fechaSelector');
+        const gridHorarios = document.getElementById('gridHorarios');
+        const btnConfirmar = document.getElementById('btnConfirmar');
+        const servicioSelector = document.getElementById('servicioSelector');
+        let horaSeleccionada = null;
+
+        const horariosBase = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20"];
+
+        onValue(ref(db, 'configuracion/precios'), (snap) => {
+            const p = snap.val() || { pelo: 0, barba: 0, promo: 0 };
+            servicioSelector.innerHTML = `
+                <option value="">-- Elige un servicio --</option>
+                <option value="Corte de Pelo">Corte de Pelo ($${p.pelo})</option>
+                <option value="Corte de Barba">Corte de Barba ($${p.barba})</option>
+                <option value="Pelo y Barba">Pelo y Barba ($${p.promo})</option>
+            `;
+        });
+
+        const cargarSemana = () => {
+            const hoy = new Date();
+            const lunes = new Date(hoy);
+            lunes.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1);
+            for (let i = 0; i < 5; i++) {
+                const d = new Date(lunes); d.setDate(lunes.getDate() + i);
+                const iso = d.toISOString().split('T')[0];
+                const opt = document.createElement('option'); opt.value = iso;
+                opt.textContent = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' });
+                fechaSelector.appendChild(opt);
+            }
+        };
+        cargarSemana();
+
+        fechaSelector.onchange = (e) => {
+            const fecha = e.target.value;
+            if (!fecha) return;
+            document.getElementById('areaHorarios').style.display = 'block';
+            onValue(ref(db, 'reservas/' + fecha), (snap) => {
+                const ocupados = snap.val() || {};
+                gridHorarios.innerHTML = '';
+                horariosBase.forEach(h => {
+                    const btn = document.createElement('button');
+                    btn.type = "button"; btn.className = "hora-btn"; btn.textContent = h;
+                    if (ocupados[h.replace(':', '')]) { btn.disabled = true; btn.textContent = "Ocupado"; }
+                    else {
+                        btn.onclick = () => {
+                            document.querySelectorAll('.hora-btn').forEach(b => b.classList.remove('selected'));
+                            btn.classList.add('selected'); horaSeleccionada = h; btnConfirmar.disabled = false;
+                        };
+                    }
+                    gridHorarios.appendChild(btn);
+                });
+            });
+        };
+
+        document.getElementById('reservaForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const fecha = fechaSelector.value;
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const servicio = servicioSelector.value;
+            const codigo = Math.floor(1000 + Math.random() * 9000);
+
+            btnConfirmar.disabled = true;
+
+            try {
+                await set(ref(db, `reservas/${fecha}/${horaSeleccionada.replace(':', '')}`), {
+                    cliente: nombre, email: email, hora: horaSeleccionada, servicio: servicio, codigo: codigo
+                });
+
+                const templateParams = {
+                    user_name: nombre,
+                    to_email: email,
+                    fecha: fecha,
+                    hora: horaSeleccionada,
+                    servicio: servicio,
+                    codigo_cliente: codigo
+                };
+
+                await emailjs.send('service_qxgh4af', 'template_uz38qwe', templateParams);
+
+                document.getElementById('resumenCita').innerHTML = `Turno para <b>${servicio}</b> agendado el <b>${fecha}</b> a las <b>${horaSeleccionada}</b>.`;
+                document.getElementById('mensajeExito').style.display = 'flex';
+            } catch (err) {
+                alert("Error: " + err.message);
+                btnConfirmar.disabled = false;
+            }
+        };
+    </script>
+    <footer>
+        <p>© 2026 <a href="admin.html" style="color:#222; text-decoration:none;">Luxury Style</a></p>
+    </footer>
+</body>
+
+</html>
