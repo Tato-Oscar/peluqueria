@@ -3,103 +3,149 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Peluquería</title>
+    <title>Admin - Barbería</title>
     <style>
+        :root {
+            --primary: #1a1a1a;
+            --accent: #d4af37;
+            --danger: #ff4d4d;
+            --success: #28a745;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: #f0f2f5;
             padding: 20px;
         }
 
-        .admin-card {
+        .card {
             background: white;
             max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0 auto 20px;
+            padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            color: #1a1a1a;
-            border-bottom: 2px solid #d4af37;
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
+            margin-top: 0;
         }
 
-        .dia-seccion {
-            margin-top: 30px;
+        .price-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .dia-titulo {
-            background: #1a1a1a;
-            color: white;
+        .price-inputs input {
+            width: 100%;
             padding: 10px;
-            border-radius: 5px;
-            text-transform: capitalize;
+            border-radius: 6px;
+            border: 1px solid #ddd;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         th,
         td {
-            text-align: left;
             padding: 12px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #eee;
+            text-align: left;
         }
 
         th {
-            background: #f8f9fa;
-            color: #666;
-            font-size: 0.8rem;
+            color: #888;
             text-transform: uppercase;
+            font-size: 0.75rem;
         }
 
         .hora {
             font-weight: bold;
-            color: #d4af37;
-            width: 80px;
+            color: var(--accent);
         }
 
-        .no-citas {
-            color: #999;
-            font-style: italic;
-            padding: 10px;
-        }
-
-        /* Estilo para el botón eliminar */
-        .btn-eliminar {
-            background-color: #ff4d4d;
-            color: white;
+        .btn {
+            padding: 8px 15px;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.3s;
+            font-weight: bold;
         }
 
-        .btn-eliminar:hover {
-            background-color: #cc0000;
+        .btn-save {
+            background: var(--success);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-del {
+            background: var(--danger);
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        /* MODAL DE CONSULTA PERSONALIZADO */
+        #modalConfirm {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 350px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="admin-card">
-        <h1>Agenda de Citas</h1>
-        <div id="contenedor-agenda">Cargando citas...</div>
+    <div class="card">
+        <h2>Ajustes de Precios</h2>
+        <div class="price-inputs">
+            <input type="number" id="pPelo" placeholder="Precio Pelo">
+            <input type="number" id="pBarba" placeholder="Precio Barba">
+            <input type="number" id="pPromo" placeholder="Precio Promo">
+        </div>
+        <button id="btnSavePrices" class="btn btn-save">GUARDAR PRECIOS EN LA WEB</button>
+    </div>
+
+    <div class="card">
+        <h2>Agenda de Citas</h2>
+        <div id="agendaContent">Cargando...</div>
+    </div>
+
+    <div id="modalConfirm">
+        <div class="modal-box">
+            <h3>¿Borrar esta cita?</h3>
+            <p>Se eliminará de la base de datos permanentemente.</p>
+            <button id="confirmYes" class="btn" style="background:var(--danger); color:white; margin:10px;">SÍ,
+                BORRAR</button>
+            <button onclick="closeModal()" class="btn" style="background:#ccc; margin:10px;">CANCELAR</button>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        // Importamos 'remove' para poder borrar datos
-        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, remove, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
@@ -107,83 +153,59 @@
             databaseURL: "https://peluqueria-3cfca-default-rtdb.firebaseio.com",
             projectId: "peluqueria-3cfca",
             storageBucket: "peluqueria-3cfca.firebasestorage.app",
-            messagingSenderId: "918388907412",
-            appId: "1:918388907412:web:cd0698e4e2745126398381",
-            measurementId: "G-EWX4G5JNF8"
+            appId: "1:918388907412:web:cd0698e4e2745126398381"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const contenedor = document.getElementById('contenedor-agenda');
 
-        const reservasRef = ref(db, 'reservas');
-
-        onValue(reservasRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data) {
-                contenedor.innerHTML = "<p class='no-citas'>No hay reservas registradas todavía.</p>";
-                return;
+        // Precios
+        get(ref(db, 'configuracion/precios')).then(s => {
+            if (s.exists()) {
+                const v = s.val();
+                document.getElementById('pPelo').value = v.pelo;
+                document.getElementById('pBarba').value = v.barba;
+                document.getElementById('pPromo').value = v.promo;
             }
-            renderizarAgenda(data);
         });
 
-        // Función para eliminar cita
-        window.eliminarCita = (fecha, horaKey) => {
-            if (confirm(`¿Estás seguro de que quieres eliminar la cita de las ${horaKey}?`)) {
-                // Ruta exacta del nodo a eliminar: reservas/2023-10-25/09:00
-                const citaRef = ref(db, `reservas/${fecha}/${horaKey}`);
-                remove(citaRef)
-                    .then(() => alert("Cita eliminada correctamente"))
-                    .catch((error) => console.error("Error al eliminar:", error));
-            }
+        document.getElementById('btnSavePrices').onclick = () => {
+            set(ref(db, 'configuracion/precios'), {
+                pelo: document.getElementById('pPelo').value,
+                barba: document.getElementById('pBarba').value,
+                promo: document.getElementById('pPromo').value
+            }).then(() => alert("Precios actualizados"));
         };
 
-        function renderizarAgenda(data) {
-            contenedor.innerHTML = '';
-            const fechasOrdenadas = Object.keys(data).sort();
+        // Agenda
+        let refToDelete = null;
+        window.askDelete = (f, h) => {
+            refToDelete = ref(db, `reservas/${f}/${h}`);
+            document.getElementById('modalConfirm').style.display = 'flex';
+        };
+        window.closeModal = () => document.getElementById('modalConfirm').style.display = 'none';
 
-            fechasOrdenadas.forEach(fecha => {
-                const seccion = document.createElement('div');
-                seccion.className = 'dia-seccion';
-
-                const fechaObj = new Date(fecha + "T00:00:00");
-                const fechaTexto = fechaObj.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-
-                let html = `<h3 class="dia-titulo">${fechaTexto}</h3>`;
-                html += `<table>
-                            <thead>
-                                <tr>
-                                    <th>Hora</th>
-                                    <th>Cliente</th>
-                                    <th>Email</th>
-                                    <th>Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
-
-                const turnos = data[fecha];
-                const horasOrdenadas = Object.keys(turnos).sort();
-
-                horasOrdenadas.forEach(h => {
-                    const cita = turnos[h];
-                    // El id de la hora se usa para saber qué borrar
-                    html += `<tr>
-                                <td class="hora">${cita.hora}</td>
-                                <td>${cita.cliente}</td>
-                                <td>${cita.email}</td>
-                                <td>
-                                    <button class="btn-eliminar" onclick="eliminarCita('${fecha}', '${h}')">
-                                        Eliminar
-                                    </button>
-                                </td>
-                            </tr>`;
-                });
-
-                html += `</tbody></table>`;
-                seccion.innerHTML = html;
-                contenedor.appendChild(seccion);
+        document.getElementById('confirmYes').onclick = () => {
+            remove(refToDelete).then(() => {
+                closeModal();
             });
-        }
+        };
+
+        onValue(ref(db, 'reservas'), (snap) => {
+            const data = snap.val();
+            const cont = document.getElementById('agendaContent');
+            if (!data) { cont.innerHTML = "No hay citas."; return; }
+            cont.innerHTML = '';
+            Object.keys(data).sort().forEach(fecha => {
+                let html = `<h3>${fecha}</h3><table><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Acción</th></tr>`;
+                Object.keys(data[fecha]).sort().forEach(h => {
+                    const c = data[fecha][h];
+                    html += `<tr><td class="hora">${c.hora}</td><td>${c.cliente}</td><td>${c.servicio || 'S/D'}</td>
+                    <td><button class="btn btn-del" onclick="askDelete('${fecha}','${h}')">Eliminar</button></td></tr>`;
+                });
+                cont.innerHTML += html + '</table>';
+            });
+        });
     </script>
 </body>
 

@@ -4,42 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva Peluquería</title>
+    <title>Barbería Aesthetic - Reservas</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
             --primary: #1a1a1a;
             --accent: #d4af37;
-            --bg: #f8f9fa;
+            --bg-overlay: rgba(0, 0, 0, 0.75);
             --success: #28a745;
         }
 
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            /* Fondo Aesthetic de Barbería */
+            background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+                url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            padding: 50px 20px;
         }
 
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
+            color: #333;
+            backdrop-filter: blur(10px);
         }
 
-        /* Estilos de formulario y botones */
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #555;
+        }
+
         input,
         select {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
+            margin: 8px 0;
             border: 1px solid #ddd;
             border-radius: 8px;
-            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
         }
 
         .grid-horarios {
@@ -50,11 +91,13 @@
         }
 
         .hora-btn {
-            padding: 10px;
+            padding: 12px 5px;
             border: 1px solid #ddd;
+            background: #fff;
             border-radius: 8px;
             cursor: pointer;
-            background: white;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
         .hora-btn.selected {
@@ -78,13 +121,17 @@
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
         }
 
-        .btn-enviar:disabled {
-            background: #ccc;
+        .btn-enviar:hover:not(:disabled) {
+            background: #333;
+            transform: translateY(-2px);
         }
 
-        /* Estilos del Mensaje de Éxito (Overlay) */
+        /* MODAL ÉXITO */
         #mensajeExito {
             display: none;
             position: fixed;
@@ -92,7 +139,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -104,60 +151,114 @@
             border-radius: 20px;
             text-align: center;
             max-width: 400px;
-            animation: popIn 0.3s ease-out;
+            color: #333;
         }
 
         .icon-check {
-            font-size: 50px;
+            font-size: 60px;
             color: var(--success);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        @keyframes popIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
+        /* FOOTER */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-top: 1px solid var(--accent);
+        }
 
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-section p {
+            font-size: 0.9rem;
+            color: #bbb;
+            line-height: 1.8;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 2px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container">
-        <h2>PELUQUERÍA</h2>
-        <form id="reservaForm">
-            <label>Nombre y Apellido</label>
-            <input type="text" id="nombre" required>
+    <div class="main-content">
+        <div class="container">
+            <h2>Reservar Turno</h2>
+            <form id="reservaForm">
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
 
-            <label>Correo Electrónico</label>
-            <input type="email" id="email" required>
+                <label>Tu Correo</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com" required>
 
-            <label>Selecciona el Día</label>
-            <select id="fechaSelector" required>
-                <option value="">-- Selecciona --</option>
-            </select>
+                <label>Servicio</label>
+                <select id="servicioSelector" required>
+                    <option value="">Cargando precios...</option>
+                </select>
 
-            <div id="areaHorarios" style="display:none;">
-                <label>Horarios disponibles</label>
-                <div id="gridHorarios" class="grid-horarios"></div>
-            </div>
+                <label>Fecha</label>
+                <select id="fechaSelector" required>
+                    <option value="">-- Elige un día --</option>
+                </select>
 
-            <button type="submit" id="btnConfirmar" class="btn-enviar" disabled>CONFIRMAR RESERVA</button>
-        </form>
+                <div id="areaHorarios" style="display:none;">
+                    <label>Horas Disponibles</label>
+                    <div id="gridHorarios" class="grid-horarios"></div>
+                </div>
+
+                <button type="submit" id="btnConfirmar" class="btn-enviar" disabled>CONFIRMAR CITA</button>
+            </form>
+        </div>
     </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h4>Horarios</h4>
+                <p>Lunes a Viernes<br>09:00 - 11:30 | 16:00 - 20:00</p>
+            </div>
+            <div class="footer-section">
+                <h4>Ubicación</h4>
+                <p>Calle Falsa 123, Barrio Aesthetic<br>Tu Ciudad, CP 0000</p>
+                <a href="#" target="_blank" style="color:var(--accent); font-size:0.8rem;">Google Maps</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <div id="mensajeExito">
         <div class="modal-content">
             <div class="icon-check">✔</div>
-            <h2 style="color: var(--success); border:none;">¡Reserva Exitosa!</h2>
+            <h2>¡Reserva Lista!</h2>
             <p id="resumenCita"></p>
-            <button class="btn-enviar" onclick="location.reload()">Aceptar</button>
+            <button class="btn-enviar" onclick="location.reload()">Cerrar</button>
         </div>
     </div>
 
@@ -181,15 +282,27 @@
         const fechaSelector = document.getElementById('fechaSelector');
         const gridHorarios = document.getElementById('gridHorarios');
         const btnConfirmar = document.getElementById('btnConfirmar');
+        const servicioSelector = document.getElementById('servicioSelector');
         let horaSeleccionada = null;
 
-        // Lógica de horarios e intervalos (Misma que antes)
         const horariosBase = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20"];
 
-        // Cargar selector de días
-        const cargarDias = () => {
+        // Precios Dinámicos
+        onValue(ref(db, 'configuracion/precios'), (snap) => {
+            const p = snap.val() || { pelo: 0, barba: 0, promo: 0 };
+            servicioSelector.innerHTML = `
+                <option value="">-- Elige un servicio --</option>
+                <option value="Corte de Pelo">Corte de Pelo ($${p.pelo})</option>
+                <option value="Corte de Barba">Corte de Barba ($${p.barba})</option>
+                <option value="Pelo y Barba">Pelo y Barba ($${p.promo})</option>
+            `;
+        });
+
+        // Generar días
+        const cargarSemana = () => {
             const hoy = new Date();
-            const lunes = new Date(hoy.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1));
+            const lunes = new Date(hoy);
+            lunes.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1);
             for (let i = 0; i < 5; i++) {
                 const d = new Date(lunes); d.setDate(lunes.getDate() + i);
                 const iso = d.toISOString().split('T')[0];
@@ -198,7 +311,7 @@
                 fechaSelector.appendChild(opt);
             }
         };
-        cargarDias();
+        cargarSemana();
 
         fechaSelector.onchange = (e) => {
             const fecha = e.target.value;
@@ -222,29 +335,26 @@
             });
         };
 
-        // FUNCIÓN DE RESERVA ACTUALIZADA
         document.getElementById('reservaForm').onsubmit = async (e) => {
             e.preventDefault();
             const fecha = fechaSelector.value;
             const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
+            const servicio = servicioSelector.value;
 
             btnConfirmar.disabled = true;
-            btnConfirmar.textContent = "Procesando...";
 
             try {
-                // 1. Guardar en Firebase
                 await set(ref(db, `reservas/${fecha}/${horaSeleccionada.replace(':', '')}`), {
-                    cliente: nombre, email: email, hora: horaSeleccionada
+                    cliente: nombre, email: email, hora: horaSeleccionada, servicio: servicio
                 });
 
-                // 2. Enviar Correo (Opcional, asegúrate de tener el Service y Template ID)
-                // await emailjs.send('SERVICE_ID', 'TEMPLATE_ID', { to_name: nombre, to_email: email, fecha_reserva: fecha, hora_reserva: horaSeleccionada });
+                await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                    to_name: nombre, to_email: email, fecha_reserva: fecha, hora_reserva: horaSeleccionada, servicio_elegido: servicio
+                });
 
-                // 3. MOSTRAR MENSAJE DE ÉXITO MODAL
-                document.getElementById('resumenCita').innerText = `Gracias ${nombre}. Te esperamos el día ${fecha} a las ${horaSeleccionada}.`;
+                document.getElementById('resumenCita').innerHTML = `Turno para <b>${servicio}</b> agendado el <b>${fecha}</b> a las <b>${horaSeleccionada}</b>.`;
                 document.getElementById('mensajeExito').style.display = 'flex';
-
             } catch (err) {
                 alert("Error: " + err.message);
                 btnConfirmar.disabled = false;
