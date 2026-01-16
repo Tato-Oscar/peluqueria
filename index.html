@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Style - Inicio</title>
+    <link rel="icon" href="logo-peluqueria.webp" type="image/png">
+    <title>THE OLD - Inicio</title>
     <style>
         :root {
             --primary: #1a1a1a;
@@ -34,10 +35,17 @@
         }
 
         .hero h1 {
+            font-family: 'Courier New', Courier, monospace;
             font-size: 4rem;
             color: var(--accent);
             margin: 0;
             letter-spacing: 5px;
+        }
+        .hero p {
+            font-size: 1.7rem;
+            margin: 20px 0;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--text);
         }
 
         .btn-main {
@@ -53,85 +61,390 @@
 
         /* SECCIONES COMPLEMENTARIAS */
         .section {
-            padding: 80px 20px;
+            padding: 60px 20px;
             text-align: center;
         }
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            padding: 20px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid #333;
-        }
-
+        /* CONTENEDORES CON SCROLL HORIZONTAL */
+        .gallery,
         .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            overflow-x: auto;
             gap: 20px;
-            padding: 20px;
+            padding: 20px 70px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .card {
-            background: #1a1a1a;
-            padding: 20px;
+        /* Estilización de la barra de scroll */
+        .gallery::-webkit-scrollbar,
+        .products::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .gallery::-webkit-scrollbar-thumb,
+        .products::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .gallery::-webkit-scrollbar-track,
+        .products::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        /* AJUSTE DE IMÁGENES DE GALERÍA (Cortes) */
+        .gallery img {
+            min-width: 300px;
+            max-width: 350px;
+            height: 500px;
+            object-fit: cover;
             border-radius: 15px;
             border: 1px solid #333;
+            scroll-snap-align: center;
+            flex-shrink: 0;
+        }
+
+        /* AJUSTE DE TARJETAS DE PRODUCTO (Cartas más pequeñas) */
+        .card {
+            min-width: 300px; /* Igualado al min-width de los cortes */
+            max-width: 320px;
+            background: #1a1a1a;
+            padding: 15px; /* Reducido para que la carta se vea más compacta */
+            border-radius: 15px;
+            border: 1px solid #333;
+            scroll-snap-align: center;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .card img {
             width: 100%;
+            height: 380px; /* Altura controlada para que sea estilizada */
+            object-fit: cover; /* Asegura que la imagen del producto no se deforme */
             border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .card p {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         footer {
-            padding: 40px;
-            background: #000;
-            border-top: 1px solid var(--accent);
-            text-align: center;
-        }
+        background: #050505;
+        color: #fff;
+        padding: 60px 20px;
+        text-align: center;
+        border-top: 1px solid var(--accent);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .footer-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .footer-section h4 {
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 25px;
+        font-size: 1.2rem;
+    }
+
+    .footer-section p {
+        font-size: 0.95rem;
+        line-height: 1.8;
+        color: #ccc;
+        margin: 5px 0;
+    }
+
+    .footer-section a{
+        color:#d4af37
+    }
+    
+    .footer-section a:hover {
+        color: var(--accent);
+    }
+
+
+    .footer-section .icon {
+        margin-right: 10px;
+        color: var(--accent);
+    }
+
+    .social-icons {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .social-icons a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 10px 20px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
+
+    .social-icons a:hover {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+    }
+
+    .copyright {
+        margin-top: 70px;
+        padding-top: 20px;
+        border-top: 1px solid #1a1a1a;
+        color: #e8e2e2;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    .copyright a:hover {
+        color: var(--accent);
+    }
+    .admin-link-footer {
+        color: #d6d6d6; /* Casi invisible para seguridad */
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .admin-link-footer:hover {
+        color: var(--accent);
+    }
     </style>
 </head>
 
 <body>
-
     <section class="hero">
-        <h1>LUXURY STYLE</h1>
+        <h1>THE OLD</h1>
         <p>"Donde el estilo se encuentra con la perfección"</p>
         <a href="reserva.html" class="btn-main">RESERVAR TURNO</a>
     </section>
 
     <section class="section">
-        <h2 style="color:var(--accent)">NUESTROS CORTES</h2>
+        <h2 style="color:var(--accent); display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <img src="logo-peluqueria.webp" alt="logo" style="width: 30px; height: 30px; border-radius: 50%;">
+            NUESTROS CORTES
+        </h2>
         <div class="gallery">
-            <img src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?q=80&w=2070">
-            <img src="https://images.unsplash.com/photo-1599351432247-f012fc4ad455?q=80&w=1887">
+            <img src="https://imgs.search.brave.com/dsOgMthdUBHpsqCU1lp5IXqOAOJMuOUBuDzA5PI0e5Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZmFkZV84OWZkYWU4/NF8yNDA2MTIxMzA0/MjRfODAweDgxNi53/ZWJw">
+            <img src="https://imgs.search.brave.com/x_ibVwL5o_f2cxfBMeClfbps-Bx3YSwjsl5MyRx9NcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZHJvcC1mYWRlX2Uy/MzUyYTViXzI0MDYx/MjEzMDU1NF84MDB4/MTAwMC53ZWJw">
+            <img src="https://imgs.search.brave.com/8GOJRvI-HXHsXuFxnUR_DquV3s7MMivfio1NDj4EAEU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDUvMjgvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1pbmktYnJ1/c2gtdXBfYTYxZGFj/OTFfMjQwNTI4MTA1/MjU5XzgwMHgxMDEw/LndlYnA">
+            <img src="https://imgs.search.brave.com/GZtXWRSUaOy9j2ukx-9jIxyl-bWcP6urnhdp674XuU4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yYWZm/ZWxwYWdlc2ZyYW5j/ZXNjbWFjaWEuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDIy/LzA1L21lam9yZXMt/Y29ydGVzLWRlLWNh/YmVsbG8tcGFyYS1o/b21icmUtb3Rvbm8t/aW52aWVybm8tcGVs/by1jb3J0by0yMDE1/LTIwMTYtcmF5YS1o/YWNpYS11bi1sYWRv/LmpwZw">
+            <img src="https://imgs.search.brave.com/dsOgMthdUBHpsqCU1lp5IXqOAOJMuOUBuDzA5PI0e5Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZmFkZV84OWZkYWU4/NF8yNDA2MTIxMzA0/MjRfODAweDgxNi53/ZWJw">
+            <img src="https://imgs.search.brave.com/x_ibVwL5o_f2cxfBMeClfbps-Bx3YSwjsl5MyRx9NcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZHJvcC1mYWRlX2Uy/MzUyYTViXzI0MDYx/MjEzMDU1NF84MDB4/MTAwMC53ZWJw">
+            <img src="https://imgs.search.brave.com/8GOJRvI-HXHsXuFxnUR_DquV3s7MMivfio1NDj4EAEU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDUvMjgvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1pbmktYnJ1/c2gtdXBfYTYxZGFj/OTFfMjQwNTI4MTA1/MjU5XzgwMHgxMDEw/LndlYnA">
+            <img src="https://imgs.search.brave.com/GZtXWRSUaOy9j2ukx-9jIxyl-bWcP6urnhdp674XuU4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yYWZm/ZWxwYWdlc2ZyYW5j/ZXNjbWFjaWEuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDIy/LzA1L21lam9yZXMt/Y29ydGVzLWRlLWNh/YmVsbG8tcGFyYS1o/b21icmUtb3Rvbm8t/aW52aWVybm8tcGVs/by1jb3J0by0yMDE1/LTIwMTYtcmF5YS1o/YWNpYS11bi1sYWRv/LmpwZw">
+            <img src="https://imgs.search.brave.com/dsOgMthdUBHpsqCU1lp5IXqOAOJMuOUBuDzA5PI0e5Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZmFkZV84OWZkYWU4/NF8yNDA2MTIxMzA0/MjRfODAweDgxNi53/ZWJw">
+            <img src="https://imgs.search.brave.com/x_ibVwL5o_f2cxfBMeClfbps-Bx3YSwjsl5MyRx9NcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZHJvcC1mYWRlX2Uy/MzUyYTViXzI0MDYx/MjEzMDU1NF84MDB4/MTAwMC53ZWJw">
+            <img src="https://imgs.search.brave.com/8GOJRvI-HXHsXuFxnUR_DquV3s7MMivfio1NDj4EAEU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDUvMjgvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1pbmktYnJ1/c2gtdXBfYTYxZGFj/OTFfMjQwNTI4MTA1/MjU5XzgwMHgxMDEw/LndlYnA">
+            <img src="https://imgs.search.brave.com/GZtXWRSUaOy9j2ukx-9jIxyl-bWcP6urnhdp674XuU4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yYWZm/ZWxwYWdlc2ZyYW5j/ZXNjbWFjaWEuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDIy/LzA1L21lam9yZXMt/Y29ydGVzLWRlLWNh/YmVsbG8tcGFyYS1o/b21icmUtb3Rvbm8t/aW52aWVybm8tcGVs/by1jb3J0by0yMDE1/LTIwMTYtcmF5YS1o/YWNpYS11bi1sYWRv/LmpwZw">
+            <img src="https://imgs.search.brave.com/dsOgMthdUBHpsqCU1lp5IXqOAOJMuOUBuDzA5PI0e5Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZmFkZV84OWZkYWU4/NF8yNDA2MTIxMzA0/MjRfODAweDgxNi53/ZWJw">
+            <img src="https://imgs.search.brave.com/x_ibVwL5o_f2cxfBMeClfbps-Bx3YSwjsl5MyRx9NcQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDYvMTIvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1vZGVybm8t/ZHJvcC1mYWRlX2Uy/MzUyYTViXzI0MDYx/MjEzMDU1NF84MDB4/MTAwMC53ZWJw">
+            <img src="https://imgs.search.brave.com/8GOJRvI-HXHsXuFxnUR_DquV3s7MMivfio1NDj4EAEU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50LmNsYXJhLmVz/L21lZGlvLzIwMjQv/MDUvMjgvY29ydGVz/LWRlLXBlbG8taG9t/YnJlLW1pbmktYnJ1/c2gtdXBfYTYxZGFj/OTFfMjQwNTI4MTA1/MjU5XzgwMHgxMDEw/LndlYnA">
+            <img src="https://imgs.search.brave.com/GZtXWRSUaOy9j2ukx-9jIxyl-bWcP6urnhdp674XuU4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yYWZm/ZWxwYWdlc2ZyYW5j/ZXNjbWFjaWEuY29t/L3dwLWNvbnRlbnQv/dXBsb2Fkcy8yMDIy/LzA1L21lam9yZXMt/Y29ydGVzLWRlLWNh/YmVsbG8tcGFyYS1o/b21icmUtb3Rvbm8t/aW52aWVybm8tcGVs/by1jb3J0by0yMDE1/LTIwMTYtcmF5YS1o/YWNpYS11bi1sYWRv/LmpwZw">
         </div>
     </section>
 
     <section class="section" style="background:#111">
-        <h2 style="color:var(--accent)">SHOP & MERCH</h2>
+        <h2 style="color:var(--accent);display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <img src="logo-peluqueria.webp" alt="logo" style="width: 30px; height: 30px; border-radius: 50%;">
+            SHOP & MERCH
+        </h2>
         <div class="products">
             <div class="card">
-                <img src="https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?q=80&w=2071">
-                <h3>Pomada Premium</h3>
-                <p>$8.500 ARS</p>
-                <a href="https://wa.me/3445411318" style="color:var(--accent)">Consultar</a>
+                <img src="https://imgs.search.brave.com/liKUiGVkPB82PNgb6MIgCxV8NYl8dbLaoAAODAuAW4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmVi/YXlpbWcuY29tL2lt/YWdlcy9nLzljOEFB/ZVN3RjBScFJtZVAv/cy1sNDAwLndlYnA">
+                <div>
+                    <h3>Pomada Premium pelo</h3>
+                    <p>$8.500 ARS</p>
+                    <a href="https://wa.me/3445411318" style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://imgs.search.brave.com/YJkTN-01P5-dc2jEv80g0NTV8DVGFg54AcZ6KeeLiDY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcnR1/cm9wZWx1cXVlcm9z/LmVzL3RpZW5kYS8x/MjA1LWhvbWVfZGVm/YXVsdC9zdWF2ZWNp/dG8tcG9tYWRhLWh5/YnJpZC0xMTNnci5q/cGc">
+                <div>
+                    <h3>Pomada intermedia pelo y barba</h3>
+                    <p>$10.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/9gYwmgOd1Rt0uBiaGYjWFR3V1KT1DogLlWuHCzozn4A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdDQu/ZGVwb3NpdHBob3Rv/cy5jb20vMzYwNjIy/NzQvNDE5NDUvaS80/NTAvZGVwb3NpdHBo/b3Rvc180MTk0NTYz/NjItc3RvY2stcGhv/dG8taGFpcmRyZXNz/ZXJzLXRvb2wtaGFp/ci1jbGlwcGVyLWNs/b3NlLmpwZw">
+                <div>
+                    <h3>maquina de cortar pelo</h3>
+                    <p>$15.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/liKUiGVkPB82PNgb6MIgCxV8NYl8dbLaoAAODAuAW4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmVi/YXlpbWcuY29tL2lt/YWdlcy9nLzljOEFB/ZVN3RjBScFJtZVAv/cy1sNDAwLndlYnA">
+                <div>
+                    <h3>Pomada Premium pelo</h3>
+                    <p>$8.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/YJkTN-01P5-dc2jEv80g0NTV8DVGFg54AcZ6KeeLiDY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcnR1/cm9wZWx1cXVlcm9z/LmVzL3RpZW5kYS8x/MjA1LWhvbWVfZGVm/YXVsdC9zdWF2ZWNp/dG8tcG9tYWRhLWh5/YnJpZC0xMTNnci5q/cGc">
+                <div>
+                    <h3>Pomada intermedia pelo y barba</h3>
+                    <p>$10.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/9gYwmgOd1Rt0uBiaGYjWFR3V1KT1DogLlWuHCzozn4A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdDQu/ZGVwb3NpdHBob3Rv/cy5jb20vMzYwNjIy/NzQvNDE5NDUvaS80/NTAvZGVwb3NpdHBo/b3Rvc180MTk0NTYz/NjItc3RvY2stcGhv/dG8taGFpcmRyZXNz/ZXJzLXRvb2wtaGFp/ci1jbGlwcGVyLWNs/b3NlLmpwZw">
+                <div>
+                    <h3>maquina de cortar pelo</h3>
+                    <p>$15.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/liKUiGVkPB82PNgb6MIgCxV8NYl8dbLaoAAODAuAW4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmVi/YXlpbWcuY29tL2lt/YWdlcy9nLzljOEFB/ZVN3RjBScFJtZVAv/cy1sNDAwLndlYnA">
+                <div>
+                    <h3>Pomada Premium pelo</h3>
+                    <p>$8.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/YJkTN-01P5-dc2jEv80g0NTV8DVGFg54AcZ6KeeLiDY/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcnR1/cm9wZWx1cXVlcm9z/LmVzL3RpZW5kYS8x/MjA1LWhvbWVfZGVm/YXVsdC9zdWF2ZWNp/dG8tcG9tYWRhLWh5/YnJpZC0xMTNnci5q/cGc">
+                <div>
+                    <h3>Pomada intermedia pelo y barba</h3>
+                    <p>$10.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/9gYwmgOd1Rt0uBiaGYjWFR3V1KT1DogLlWuHCzozn4A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdDQu/ZGVwb3NpdHBob3Rv/cy5jb20vMzYwNjIy/NzQvNDE5NDUvaS80/NTAvZGVwb3NpdHBo/b3Rvc180MTk0NTYz/NjItc3RvY2stcGhv/dG8taGFpcmRyZXNz/ZXJzLXRvb2wtaGFp/ci1jbGlwcGVyLWNs/b3NlLmpwZw">
+                <div>
+                    <h3>maquina de cortar pelo</h3>
+                    <p>$15.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px;">Consultar</a>
+                </div>
+            </div>
+            <div class="card">
+                <img
+                    src="https://imgs.search.brave.com/liKUiGVkPB82PNgb6MIgCxV8NYl8dbLaoAAODAuAW4Y/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmVi/YXlpbWcuY29tL2lt/YWdlcy9nLzljOEFB/ZVN3RjBScFJtZVAv/cy1sNDAwLndlYnA">
+                <div>
+                    <h3>Pomada Premium pelo</h3>
+                    <p>$8.500 ARS</p>
+                    <a href="https://wa.me/3445411318"
+                        style="color:var(--accent); text-decoration: none; font-weight: bold; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 5px; ">Consultar</a>
+                        
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 <a href="admin.html" style="color:#222; text-decoration:none;">Luxury Style</a></p>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4><span class="icon">🕒</span>Horarios</h4>
+                <p><strong>Lunes a Sábado</strong></p>
+                <p>09:00 – 11:30 hs</p>
+                <p>16:00 – 20:00 hs</p>
+            </div>
+    
+            <div class="footer-section">
+                <h4><span class="icon">📍</span>Ubicación</h4>
+                <a href="https://maps.app.goo.gl/gFssDXUAHNj7oVX28">Plaza San Martin,
+                    Concepcion Del Uruguay</a>
+                <p>Entre Ríos, Argentina</p>
+                <p>3260</p>
+            </div>
+    
+            <div class="footer-section">
+                <h4><span class="icon">📱</span>Contacto</h4>
+                <div class="social-icons">
+                    <a href="https://wa.me/3445411318" target="_blank">WhatsApp</a>
+                    <a href="https://www.instagram.com/oscar.meichtry_/" target="_blank">Instagram</a>
+                    <!--<a href="https://wa.me/3445411318" target="_blank">WhatsApp</a>-->
+                    <!--<a href="https://www.instagram.com/oscar.meichtry_/" target="_blank">Instagram</a>-->
+                    <!-- <a href="https://www.facebook.com/oscar.meichtry" target="_blank">Facebook</a>-->
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="copyright">
+            <p> © 2026 <a href="admin.html" class="admin-link-footer"> THE OLD. </a> Todos los derechos reservados.</p>
+        </div>
     </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Tu configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
+            authDomain: "peluqueria-3cfca.firebaseapp.com",
+            databaseURL: "https://peluqueria-3cfca-default-rtdb.firebaseio.com",
+            projectId: "peluqueria-3cfca",
+            storageBucket: "peluqueria-3cfca.firebasestorage.app",
+            appId: "1:918388907412:web:cd0698e4e2745126398381"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- SISTEMA DE BLOQUEO POR FALTA DE PAGO ---
+        const estadoSuscripcionRef = ref(db, 'configuracion/estadoSuscripcion');
+
+        onValue(estadoSuscripcionRef, (snapshot) => {
+            const estado = snapshot.val();
+            // Si el estado en Firebase es 'inactivo', se bloquea la web
+            if (estado === "inactivo") {
+                document.body.innerHTML = `
+                        <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0a0a0a; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px;">
+                            <img src="logo-peluqueria.webp" alt="Logo" style="width: 120px; margin-bottom: 20px; filter: grayscale(1) opacity(0.5);">
+                            <h1 style="color: #d4af37; font-size: 2.5rem; letter-spacing: 2px; text-transform: uppercase;">Servicio Suspendido</h1>
+                            <p style="font-size: 1.2rem; max-width: 500px; color: #ccc; line-height: 1.6;">
+                                El periodo de prueba ha finalizado o existe un pago pendiente de la licencia de uso de este sitio web.
+                            </p>
+                            <div style="margin-top: 30px;">
+                                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Para reactivar el sistema, contacte al desarrollador:</p>
+                                <a href="https://wa.me/3445411318" style="color: #000; background: #d4af37; text-decoration: none; padding: 15px 35px; border-radius: 50px; font-weight: bold; transition: 0.3s; display: inline-block;">
+                                    CONTACTAR SOPORTE
+                                </a>
+                            </div>
+                        </div>`;
+                document.body.style.background = "#0a0a0a";
+            }
+        });
+    </script>
 </body>
 
 </html>

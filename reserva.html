@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luxury Style - Reservas</title>
+    <link rel="icon" href="logo-peluqueria.webp" type="image/png">
+    <title>THE OLD - Reservas</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         :root {
@@ -12,6 +13,8 @@
             --accent: #d4af37;
             --bg-overlay: rgba(0, 0, 0, 0.75);
             --success: #28a745;
+            --error: #d9534f;
+            --text: rgb(211, 211, 211);
         }
 
         body {
@@ -38,7 +41,7 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(38, 38, 38, 0.98);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -48,12 +51,14 @@
             backdrop-filter: blur(10px);
         }
 
-        h2 {
+        .container h2 {
+            font-size: 2rem;
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
-            color: var(--primary);
+            color: var(--accent);
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--accent);
             padding-bottom: 10px;
-            margin-top: 0;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -64,7 +69,7 @@
             font-weight: 700;
             font-size: 0.85rem;
             text-transform: uppercase;
-            color: #555;
+            color: var(--text);
         }
 
         input,
@@ -76,6 +81,14 @@
             border-radius: 8px;
             font-size: 16px;
             outline: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
         }
 
         .grid-horarios {
@@ -107,10 +120,17 @@
             cursor: not-allowed;
         }
 
+        /* Estilo para bloqueados por admin */
+        .hora-btn.bloqueado-admin {
+            background: #ffecb3;
+            color: #8a6d3b;
+            border: 1px solid #faebcc;
+        }
+
         .btn-enviar {
             width: 100%;
             padding: 15px;
-            background: var(--primary);
+            background: var(--accent);
             color: white;
             border: none;
             border-radius: 8px;
@@ -118,6 +138,27 @@
             cursor: pointer;
             font-size: 1rem;
             transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-enviar:hover:not(:disabled) {
+            background: #000000;
+            transform: translateY(-2px);
+        }
+
+        .btn-enviar:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-ws-confirm {
+            background: #25d366 !important;
+            margin-bottom: 10px;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
         }
 
         #mensajeExito {
@@ -148,73 +189,32 @@
             margin-bottom: 15px;
         }
 
-        footer {
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 50px 20px;
+        .aviso-cerrado {
+            grid-column: span 3;
             text-align: center;
-            border-top: 1px solid var(--accent);
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .footer-section h4 {
-            color: var(--accent);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .footer-section p {
-            font-size: 0.9rem;
-            color: #bbb;
-            line-height: 1.8;
-        }
-
-        .social-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
+            color: #c62828;
             font-weight: bold;
-            border-bottom: 1px solid var(--accent);
-            padding-bottom: 2px;
-        }
-
-        /* ESTILO PARA EL ACCESO OCULTO */
-        .admin-link {
-            color: #333;
-            text-decoration: none;
-            font-size: 0.7rem;
-            opacity: 0.5;
-        }
-
-        .admin-link:hover {
-            opacity: 1;
-            color: var(--accent);
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
-
     <div class="main-content">
         <div class="container">
-            <h2>Luxury Style</h2>
+            <h2>THE OLD</h2>
             <form id="reservaForm">
                 <label>Nombre Completo</label>
                 <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
 
-                <label>Tu Correo</label>
-                <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+                <label>Teléfono / WhatsApp</label>
+                <input type="tel" id="telefono" placeholder="Ej: 3445------" required>
 
                 <label>Servicio</label>
                 <select id="servicioSelector" required>
-                    <option value="">Cargando servicios...</option>
+                    <option value="">Cargando...</option>
                 </select>
 
                 <label>Día</label>
@@ -232,39 +232,25 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-section">
-                <h4>Horarios</h4>
-                <p>Lunes a Viernes<br>09:00 - 11:30 | 16:00 - 20:00</p>
-            </div>
-            <div class="footer-section">
-                <h4>Ubicación</h4>
-                <p>Calle Falsa 123<br>Tu Ciudad, CP 0000</p>
-            </div>
-            <div class="footer-section">
-                <h4>Contacto</h4>
-                <div class="social-links">
-                    <a href="#">Instagram</a>
-                    <a href="https://wa.me/3445411318">WhatsApp</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
     <div id="mensajeExito">
         <div class="modal-content">
             <div class="icon-check">✔</div>
             <h2>¡Reserva Exitosa!</h2>
             <p id="resumenCita"></p>
-            <p>Se ha enviado un correo con los detalles y tu código de cliente.</p>
-            <button class="btn-enviar" onclick="location.reload()">Cerrar</button>
+
+            <a id="btnWsDuenio" href="#" target="_blank" class="btn-enviar btn-ws-confirm">
+                ENVIAR COMPROBANTE POR WHATSAPP
+            </a>
+
+            <button class="btn-enviar" onclick="window.location.href='index.html'" style="background: #666;">
+                VOLVER AL INICIO
+            </button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
@@ -277,7 +263,18 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        emailjs.init("n8ZeBvsOy2XMsQeBI");
+
+        // Bloqueo de seguridad por suscripción
+        onValue(ref(db, 'configuracion/estadoSuscripcion'), (snapshot) => {
+            if (snapshot.val() === "inactivo") {
+                document.body.innerHTML = `
+                    <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0a0a0a; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px;">
+                        <h1 style="color: #d4af37; font-size: 2.5rem; letter-spacing: 2px;">SERVICIO SUSPENDIDO</h1>
+                        <p style="font-size: 1.2rem; max-width: 500px; color: #ccc;">El periodo de prueba ha finalizado.</p>
+                    </div>`;
+                document.body.style.background = "#0a0a0a";
+            }
+        });
 
         const fechaSelector = document.getElementById('fechaSelector');
         const gridHorarios = document.getElementById('gridHorarios');
@@ -285,50 +282,105 @@
         const servicioSelector = document.getElementById('servicioSelector');
         let horaSeleccionada = null;
 
-        const horariosBase = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20"];
+        const horariosSemana = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20", "20:10", "21:00"];
+        const horariosSabado = ["09:00", "10:00", "11:00", "12:00", "13:00"];
 
+        // Cargar precios barbería
         onValue(ref(db, 'configuracion/precios'), (snap) => {
             const p = snap.val() || { pelo: 0, barba: 0, promo: 0 };
             servicioSelector.innerHTML = `
                 <option value="">-- Elige un servicio --</option>
                 <option value="Corte de Pelo">Corte de Pelo ($${p.pelo})</option>
                 <option value="Corte de Barba">Corte de Barba ($${p.barba})</option>
-                <option value="Pelo y Barba">Pelo y Barba ($${p.promo})</option>
+                <option value="Promo Completa">Pelo y Barba ($${p.promo})</option>
             `;
         });
 
         const cargarSemana = () => {
             const hoy = new Date();
-            const lunes = new Date(hoy);
-            lunes.setDate(hoy.getDate() - (hoy.getDay() || 7) + 1);
-            for (let i = 0; i < 5; i++) {
-                const d = new Date(lunes); d.setDate(lunes.getDate() + i);
-                const iso = d.toISOString().split('T')[0];
-                const opt = document.createElement('option'); opt.value = iso;
-                opt.textContent = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' });
+            fechaSelector.innerHTML = '<option value="">-- Elige un día --</option>';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date();
+                d.setDate(hoy.getDate() + i);
+                if (d.getDay() === 0) continue; // Saltar domingo
+                const isoLocal = d.toISOString().split('T')[0];
+                const opt = document.createElement('option');
+                opt.value = isoLocal;
+                opt.dataset.numDia = d.getDay();
+                opt.textContent = d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'short' }).toUpperCase();
                 fechaSelector.appendChild(opt);
             }
         };
         cargarSemana();
 
         fechaSelector.onchange = (e) => {
-            const fecha = e.target.value;
-            if (!fecha) return;
+            const fechaElegida = e.target.value;
+            const numDia = e.target.options[e.target.selectedIndex].dataset.numDia;
+            const ahora = new Date();
+            const hoyIso = ahora.toISOString().split('T')[0];
+
+            if (!fechaElegida) return;
             document.getElementById('areaHorarios').style.display = 'block';
-            onValue(ref(db, 'reservas/' + fecha), (snap) => {
-                const ocupados = snap.val() || {};
-                gridHorarios.innerHTML = '';
-                horariosBase.forEach(h => {
-                    const btn = document.createElement('button');
-                    btn.type = "button"; btn.className = "hora-btn"; btn.textContent = h;
-                    if (ocupados[h.replace(':', '')]) { btn.disabled = true; btn.textContent = "Ocupado"; }
-                    else {
-                        btn.onclick = () => {
-                            document.querySelectorAll('.hora-btn').forEach(b => b.classList.remove('selected'));
-                            btn.classList.add('selected'); horaSeleccionada = h; btnConfirmar.disabled = false;
-                        };
-                    }
-                    gridHorarios.appendChild(btn);
+            gridHorarios.innerHTML = '<p style="grid-column:span 3; text-align:center; color:#ccc;">Verificando disponibilidad...</p>';
+            btnConfirmar.disabled = true;
+            horaSeleccionada = null;
+
+            const listaAUsar = (numDia == 6) ? horariosSabado : horariosSemana;
+
+            // 1. CONSULTAR BLOQUEOS DEL ADMIN
+            onValue(ref(db, `bloqueos/${fechaElegida}`), (snapBloqueos) => {
+                const bloqueos = snapBloqueos.val() || {};
+
+                if (bloqueos.todo_el_dia === true) {
+                    gridHorarios.innerHTML = '<div class="aviso-cerrado">⛔ FECHA CERRADA POR EL LOCAL</div>';
+                    return;
+                }
+
+                // 2. CONSULTAR RESERVAS DE CLIENTES
+                onValue(ref(db, 'reservas/' + fechaElegida), (snapReservas) => {
+                    const ocupados = snapReservas.val() || {};
+                    gridHorarios.innerHTML = '';
+
+                    listaAUsar.forEach(h => {
+                        const btn = document.createElement('button');
+                        btn.type = "button";
+                        btn.className = "hora-btn";
+
+                        const estaOcupado = ocupados[h.replace(':', '')];
+                        const estaBloqueadoAdmin = bloqueos[h];
+
+                        let yaPaso = false;
+                        if (fechaElegida === hoyIso) {
+                            const [horaH, minH] = h.split(':').map(Number);
+                            if (horaH < ahora.getHours() || (horaH === ahora.getHours() && minH <= ahora.getMinutes())) {
+                                yaPaso = true;
+                            }
+                        }
+
+                        // PRIORIDAD DE ESTADOS
+                        if (yaPaso) {
+                            btn.disabled = true;
+                            btn.textContent = h;
+                            btn.style.textDecoration = "line-through";
+                            btn.style.opacity = "0.5";
+                        } else if (estaBloqueadoAdmin) {
+                            btn.disabled = true;
+                            btn.textContent = "No Disp.";
+                            btn.classList.add("bloqueado-admin");
+                        } else if (estaOcupado) {
+                            btn.disabled = true;
+                            btn.textContent = "Ocupado";
+                        } else {
+                            btn.textContent = h;
+                            btn.onclick = () => {
+                                document.querySelectorAll('.hora-btn').forEach(b => b.classList.remove('selected'));
+                                btn.classList.add('selected');
+                                horaSeleccionada = h;
+                                btnConfirmar.disabled = false;
+                            };
+                        }
+                        gridHorarios.appendChild(btn);
+                    });
                 });
             });
         };
@@ -337,39 +389,51 @@
             e.preventDefault();
             const fecha = fechaSelector.value;
             const nombre = document.getElementById('nombre').value;
-            const email = document.getElementById('email').value;
+            const telefono = document.getElementById('telefono').value;
             const servicio = servicioSelector.value;
-            const codigo = Math.floor(1000 + Math.random() * 9000);
+
+            const horaID = horaSeleccionada.replace(':', '');
+            const reservaRef = ref(db, `reservas/${fecha}/${horaID}`);
 
             btnConfirmar.disabled = true;
+            btnConfirmar.innerText = "VERIFICANDO...";
 
             try {
-                await set(ref(db, `reservas/${fecha}/${horaSeleccionada.replace(':', '')}`), {
-                    cliente: nombre, email: email, hora: horaSeleccionada, servicio: servicio, codigo: codigo
+                // Doble check antes de guardar
+                const snapReserva = await get(reservaRef);
+                const snapBloqueo = await get(ref(db, `bloqueos/${fecha}/${horaSeleccionada}`));
+                const snapBloqueoDia = await get(ref(db, `bloqueos/${fecha}/todo_el_dia`));
+
+                if (snapReserva.exists() || snapBloqueo.exists() || snapBloqueoDia.exists()) {
+                    alert("⚠️ ¡Uuups! Este horario ya no está disponible. Por favor elige otro.");
+                    location.reload();
+                    return;
+                }
+
+                await set(reservaRef, {
+                    cliente: nombre,
+                    telefono: telefono,
+                    hora: horaSeleccionada,
+                    servicio: servicio
                 });
 
-                const templateParams = {
-                    user_name: nombre,
-                    to_email: email,
-                    fecha: fecha,
-                    hora: horaSeleccionada,
-                    servicio: servicio,
-                    codigo_cliente: codigo
-                };
+                // Link de WhatsApp
+                const numDuenio = "3445411318";
+                const mensajeWs = `Hola!%20Soy%20${nombre},%20acabo%20de%20reservar%20un%20turno:%0A📅%20Día:%20${fecha}%0A🕒%20Hora:%20${horaSeleccionada}%0A✂️%20Servicio:%20${servicio}`;
 
-                await emailjs.send('service_qxgh4af', 'template_uz38qwe', templateParams);
+                document.getElementById('btnWsDuenio').href = `https://wa.me/${numDuenio}?text=${mensajeWs}`;
 
-                document.getElementById('resumenCita').innerHTML = `Turno para <b>${servicio}</b> agendado el <b>${fecha}</b> a las <b>${horaSeleccionada}</b>.`;
+                document.getElementById('resumenCita').innerHTML = `Turno para <b>${servicio}</b> agendado el <b>${fecha}</b> a las <b>${horaSeleccionada}</b>`;
                 document.getElementById('mensajeExito').style.display = 'flex';
+
             } catch (err) {
+                console.error(err);
                 alert("Error: " + err.message);
                 btnConfirmar.disabled = false;
+                btnConfirmar.innerText = "CONFIRMAR CITA";
             }
         };
     </script>
-    <footer>
-        <p>© 2026 <a href="admin.html" style="color:#222; text-decoration:none;">Luxury Style</a></p>
-    </footer>
 </body>
 
 </html>

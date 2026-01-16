@@ -3,123 +3,207 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Luxury Style</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Barbería</title>
+    <link rel="icon" href="logo-peluqueria.webp" type="image/png">
     <style>
         :root {
-            --primary: #1a1a1a;
-            --accent: #d4af37;
-            --danger: #ff4d4d;
-            --success: #28a745;
+            --primary: #030303;
+            --accent: #987a17;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --bg-overlay: rgba(0, 0, 0, 0.85);
+            --text: white;
+            --dark-pink: #de7c90;
         }
 
         body {
+            background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+                url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?q=80&w=2074');
+            background-size: cover;
+            background-attachment: fixed;
             font-family: 'Segoe UI', sans-serif;
-            background: #f0f2f5;
+            color: white;
+            margin: 0;
             padding: 20px;
         }
 
-        /* ESTILO DEL LOGIN */
+        /* LOGIN */
         #login-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--primary);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            color: white;
+            z-index: 1000;
         }
 
         .login-box {
-            text-align: center;
-            background: #222;
+            background: rgb(47, 47, 47);
             padding: 40px;
             border-radius: 15px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--accent);
         }
 
-        .login-box input {
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            margin-bottom: 10px;
-            width: 200px;
-            text-align: center;
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: var(--accent);
         }
 
-        /* ESTILOS DEL PANEL (Se mantienen los anteriores) */
-        .card {
-            background: white;
+        /* PANEL */
+        .panel {
+            display: none;
             max-width: 900px;
-            margin: 0 auto 20px;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            background: #948f8f;
+            padding: 30px;
+            border-radius: 15px;
+            color: #000000;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
 
         h2 {
-            color: var(--primary);
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 10px;
-            margin-top: 0;
+            color: #0d0d0d;
         }
 
-        .price-inputs {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+        h3 {
+            color: #000000;
+            border-bottom: 2px solid #d4a5a5;
+            padding-bottom: 5px;
+            margin-top: 40px;
         }
 
-        .price-inputs input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-
+        /* TABLA */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        th,
-        td {
+        th {
+            background: #000000;
+            color: white;
             padding: 12px;
-            border-bottom: 1px solid #eee;
             text-align: left;
         }
 
-        .hora {
-            font-weight: bold;
-            color: var(--accent);
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+            vertical-align: middle;
         }
 
+        /* BOTONES */
         .btn {
-            padding: 8px 15px;
+            padding: 8px 12px;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             cursor: pointer;
+            color: white;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
         }
 
         .btn-save {
-            background: var(--success);
-            color: white;
-            width: 100%;
+            background: #27ae60;
         }
 
         .btn-del {
-            background: var(--danger);
-            color: white;
-            font-size: 0.8rem;
+            background: #e74c3c;
         }
 
-        /* MODAL DE ELIMINAR */
+        .btn-ws {
+            background: #25d366;
+        }
+
+        .btn-warn {
+            background: #e67e22;
+        }
+
+        /* INPUTS */
+        .price-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            background: #948f8f;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .block-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            background: #aab7b8;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #000;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-container {
+            justify-content: flex-end;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+
+            .price-box,
+            .block-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* MODAL */
         #modalConfirm {
             display: none;
             position: fixed;
@@ -127,7 +211,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 2000;
@@ -138,8 +222,41 @@
             padding: 30px;
             border-radius: 15px;
             text-align: center;
-            max-width: 350px;
-            color: #333;
+            color: #000000;
+        }
+
+        .modal-btns {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        /* TOAST */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #27ae60;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 16px;
+            position: fixed;
+            z-index: 3000;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.5s, bottom 0.5s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
         }
     </style>
 </head>
@@ -148,45 +265,93 @@
 
     <div id="login-overlay">
         <div class="login-box">
-            <h2 style="color:white; border:none;">Luxury Style Admin</h2>
-            <p>Ingresa la contraseña maestra</p>
-            <input type="password" id="pass-input" placeholder="Contraseña">
-            <br>
-            <button class="btn btn-save" onclick="checkPass()">ENTRAR</button>
+            <h2>ADMINISTRACIÓN</h2>
+            <input type="password" id="pass" placeholder="Contraseña"
+                style="padding:10px; width:200px; margin-bottom:15px; border-radius:5px; border:none; text-align:center;"><br>
+            <button class="btn" style="background:var(--accent)" onclick="checkPass()">ENTRAR</button>
         </div>
     </div>
 
-    <div id="admin-content" style="display:none;">
-        <div class="card">
-            <h2>Ajustes de Precios</h2>
-            <div class="price-inputs">
-                <input type="number" id="pPelo" placeholder="Precio Pelo">
-                <input type="number" id="pBarba" placeholder="Precio Barba">
-                <input type="number" id="pPromo" placeholder="Precio Promo">
-            </div>
-            <button id="btnSavePrices" class="btn btn-save">ACTUALIZAR PRECIOS EN LA WEB</button>
+    <div class="panel" id="panelPrincipal">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>Panel de Control</h2>
+            <button class="btn" style="background:#e74c3c;" onclick="location.reload()">Cerrar
+                Sesión</button>
         </div>
 
-        <div class="card">
-            <h2>Agenda de Citas</h2>
-            <div id="agendaContent">Cargando...</div>
+        <h3>Gestión de Precios ($)</h3>
+        <div class="price-box">
+            <div class="form-group">
+                <label>Corte Pelo</label>
+                <input type="number" id="pPelo">
+            </div>
+            <div class="form-group">
+                <label>Corte Barba</label>
+                <input type="number" id="pBarba">
+            </div>
+            <div class="form-group">
+                <label>Promo (Pelo+Barba)</label>
+                <input type="number" id="pPromo">
+            </div>
+            <div class="form-group btn-container" style="grid-column: span 3; justify-self: center; width: 50%;">
+                <button class="btn btn-save btn-full" id="btnSavePrices">GUARDAR PRECIOS</button>
+            </div>
         </div>
+
+        <h3>Gestión de Disponibilidad (Bloqueos)</h3>
+
+
+        <div class="block-box">
+            <div class="form-group">
+                <label>Seleccionar Fecha</label>
+                <select id="inputFechaBloqueo">
+                    <option value="">Cargando fechas...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Horario Específico</label>
+                <select id="inputHoraBloqueo">
+                    <option value="">Selecciona fecha primero...</option>
+                </select>
+            </div>
+
+            <div class="form-group btn-container">
+                <button class="btn btn-warn btn-full" id="btnBloquearDia">🚫 BLOQUEAR DÍA
+                    COMPLETO</button>
+            </div>
+
+            <div class="form-group btn-container">
+                <button class="btn btn-del btn-full" id="btnBloquearHora">⏱️ BLOQUEAR SOLO HORA</button>
+            </div>
+        </div>
+
+        <div id="listaBloqueos">Cargando bloqueos...</div>
+
+
+        <h3>Agenda de Citas</h3>
+        <div id="listaReservas">Cargando citas...</div>
     </div>
 
     <div id="modalConfirm">
         <div class="modal-box">
-            <h3>¿Borrar esta cita?</h3>
-            <p>Se eliminará de la base de datos permanentemente.</p>
-            <button id="confirmYes" class="btn" style="background:var(--danger); color:white; margin:10px;">SÍ,
-                BORRAR</button>
-            <button onclick="closeModal()" class="btn" style="background:#ccc; margin:10px;">CANCELAR</button>
+            <h3 id="modalTitle">¿Eliminar?</h3>
+            <p>Esta acción no se puede deshacer.</p>
+            <div class="modal-btns">
+                <button class="btn" style="background:#ccc; color:#000000;" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-del" id="confirmarAccionBtn">Sí, Confirmar</button>
+            </div>
         </div>
     </div>
 
+    <div id="toast">✅ Acción realizada correctamente</div>
+
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, remove, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // CONFIGURACIÓN OFICIAL
         const firebaseConfig = {
             apiKey: "AIzaSyBBu0u1KIZtXS6JanjyZQuS7OJDEaPJbwE",
             authDomain: "peluqueria-3cfca.firebaseapp.com",
@@ -199,75 +364,294 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // FUNCIÓN DE LOGIN
-        window.checkPass = () => {
-            const pass = document.getElementById('pass-input').value;
-            // CAMBIA "1234" POR LA CONTRASEÑA QUE TÚ QUIERAS
-            if (pass === "1234") {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('admin-content').style.display = 'block';
-                cargarDatos();
-            } else {
-                alert("Contraseña incorrecta");
+        // ESTADO DE SUSCRIPCIÓN
+        onValue(ref(db, 'configuracion/estadoSuscripcion'), (snapshot) => {
+            const estado = snapshot.val();
+            if (estado === "inactivo") {
+                document.body.innerHTML = `
+                    <div style="position:fixed; top:0; left:0; width:100%; height:100%; background: #000; color: #fff; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:99999; text-align:center; font-family: sans-serif;">
+                    <h1 style="color: #e74c3c; font-size: 3rem; margin-bottom: 10px;">SERVICIO SUSPENDIDO</h1>
+                    <p>Contacte al administrador.</p>
+                    </div>`;
             }
+        });
+
+        window.checkPass = () => {
+            if (document.getElementById('pass').value === "admin1") {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('panelPrincipal').style.display = 'block';
+                iniciarPanel();
+            } else { alert("Contraseña incorrecta"); }
         };
 
-        function cargarDatos() {
-            // Cargar Precios
-            get(ref(db, 'configuracion/precios')).then(s => {
-                if (s.exists()) {
-                    const v = s.val();
-                    document.getElementById('pPelo').value = v.pelo;
-                    document.getElementById('pBarba').value = v.barba;
-                    document.getElementById('pPromo').value = v.promo;
+        // FUNCIÓN AUXILIAR PARA FORMATO FECHA (YYYY-MM-DD)
+        const obtenerFechaLocal = (fecha) => {
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, '0');
+            const day = String(fecha.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        function iniciarPanel() {
+            // 1. CARGAR PRECIOS
+            onValue(ref(db, 'configuracion/precios'), (snap) => {
+                const p = snap.val();
+                if (p) {
+                    document.getElementById('pPelo').value = p.pelo || 0;
+                    document.getElementById('pBarba').value = p.barba || 0;
+                    document.getElementById('pPromo').value = p.promo || 0;
                 }
             });
 
-            // Escuchar Agenda
+            document.getElementById('btnSavePrices').onclick = () => {
+                set(ref(db, 'configuracion/precios'), {
+                    pelo: document.getElementById('pPelo').value || 0,
+                    barba: document.getElementById('pBarba').value || 0,
+                    promo: document.getElementById('pPromo').value || 0,
+                }).then(() => mostrarToast("¡Precios actualizados!"));
+            };
+
+            // 3. LOGICA DE BLOQUEOS (LISTAS IGUALES AL CLIENTE)
+            const selectorFecha = document.getElementById('inputFechaBloqueo');
+            const selectHora = document.getElementById('inputHoraBloqueo');
+
+            // --- A) GENERAR LISTA DE DÍAS (Próximos 60 días) ---
+            selectorFecha.innerHTML = '<option value="">-- Selecciona una fecha --</option>';
+            const hoy = new Date();
+
+            for (let i = 0; i < 60; i++) {
+                const d = new Date();
+                d.setDate(hoy.getDate() + i);
+
+                // Si es domingo, lo saltamos (si la barbería cierra domingos)
+                if (d.getDay() === 0) continue;
+
+                const val = obtenerFechaLocal(d); // YYYY-MM-DD
+                const texto = d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric' });
+                const textoCapitalizado = texto.charAt(0).toUpperCase() + texto.slice(1);
+
+                const option = document.createElement('option');
+                option.value = val;
+                option.text = textoCapitalizado;
+                selectorFecha.appendChild(option);
+            }
+
+            // --- B) GENERAR LISTA DE HORAS AL CAMBIAR FECHA ---
+            selectorFecha.addEventListener('change', () => {
+                const fechaVal = selectorFecha.value;
+                if (!fechaVal) {
+                    selectHora.innerHTML = '<option value="">Selecciona fecha primero...</option>';
+                    return;
+                }
+
+                const dateObj = new Date(fechaVal + "T12:00:00");
+                const diaSemana = dateObj.getDay();
+
+                // HORARIOS BARBERÍA
+                const horariosSemana = ["09:00", "09:50", "10:40", "16:00", "16:50", "17:40", "18:30", "19:20", "20:10", "21:00"];
+                const horariosSabado = ["09:00", "10:00", "11:00", "12:00", "13:00"];
+
+                let horarios = (diaSemana === 6) ? horariosSabado : horariosSemana;
+
+                let html = '<option value="">-- Elige hora a anular --</option>';
+                horarios.forEach(h => {
+                    html += `<option value="${h}">${h}</option>`;
+                });
+                selectHora.innerHTML = html;
+            });
+
+            // Bloquear Dia Completo
+            document.getElementById('btnBloquearDia').onclick = () => {
+                const fecha = selectorFecha.value;
+                if (!fecha) return alert("Selecciona una fecha");
+
+                set(ref(db, `bloqueos/${fecha}/todo_el_dia`), true)
+                    .then(() => {
+                        mostrarToast("📅 Día completo bloqueado");
+                        selectorFecha.value = "";
+                        selectHora.innerHTML = '<option value="">Selecciona fecha primero...</option>';
+                    });
+            };
+
+            // Bloquear Hora Especifica
+            document.getElementById('btnBloquearHora').onclick = () => {
+                const fecha = selectorFecha.value;
+                const hora = selectHora.value;
+
+                if (!fecha || !hora) return alert("Selecciona fecha y hora");
+
+                set(ref(db, `bloqueos/${fecha}/${hora}`), "Bloqueado")
+                    .then(() => {
+                        mostrarToast("⏱️ Horario bloqueado");
+                        selectHora.value = "";
+                    });
+            };
+
+            // Cargar Lista de Bloqueos
+            onValue(ref(db, 'bloqueos'), (snap) => {
+                const data = snap.val();
+                const div = document.getElementById('listaBloqueos');
+                div.innerHTML = "";
+
+                if (!data) {
+                    div.innerHTML = "<p>No hay bloqueos activos.</p>";
+                    return;
+                }
+
+                let html = `<table><thead><tr><th>Fecha</th><th>Detalle</th><th>Acción</th></tr></thead><tbody>`;
+
+                Object.keys(data).sort().forEach(fecha => {
+                    const infoFecha = data[fecha];
+
+                    if (infoFecha.todo_el_dia === true) {
+                        html += `<tr>
+                    <td style="color:#e74c3c; font-weight:bold;">${fecha}</td>
+                    <td>🚫 DÍA COMPLETO (Cerrado)</td>
+                    <td><button class="btn btn-save" onclick="askDeleteBlock('${fecha}', 'todo_el_dia')">Desbloquear</button></td>
+                    </tr>`;
+                    } else {
+                        Object.keys(infoFecha).sort().forEach(horaKey => {
+                            if (horaKey !== "todo_el_dia") {
+                                html += `<tr>
+                    <td>${fecha}</td>
+                    <td>⏱️ ${horaKey} hs</td>
+                    <td><button class="btn btn-save" onclick="askDeleteBlock('${fecha}', '${horaKey}')">Desbloquear</button></td>
+                    </tr>`;
+                            }
+                        });
+                    }
+                });
+                html += `</tbody></table>`;
+                div.innerHTML = html;
+            });
+
+            // 4. CARGAR CITAS (AGENDA)
             onValue(ref(db, 'reservas'), (snap) => {
                 const data = snap.val();
-                const cont = document.getElementById('agendaContent');
-                if (!data) { cont.innerHTML = "No hay citas registradas."; return; }
-                cont.innerHTML = '';
+                const cont = document.getElementById('listaReservas');
+                cont.innerHTML = "";
+
+                if (!data) { cont.innerHTML = "<p style='color:black; font-weight:700;'>No hay citas agendadas.</p>"; return; }
+
+                // Función simple para limpiar citas viejas
+                limpiarCitasViejas(data);
+
                 Object.keys(data).sort().forEach(fecha => {
-                    let html = `<h3>${fecha}</h3><table><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Código</th><th>Acción</th></tr>`;
-                    Object.keys(data[fecha]).sort().forEach(h => {
-                        const c = data[fecha][h];
+                    let html = `<h4 style="background: #948f8f; padding:5px; margin-top:15px;">📅 ${fecha}</h4>
+                        <table>
+                    <thead>
+                    <tr>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Servicio</th>
+                    <th>Contacto</th>
+                    <th>Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>`;
+
+                    const citasDia = data[fecha];
+                    Object.keys(citasDia).sort().forEach(h => {
+                        const c = citasDia[h];
+                        const msg = `Hola ${c.cliente}, te escribo por tu turno del día ${fecha} a las ${c.hora}.`;
+                        const linkWs = `https://wa.me/${c.telefono}?text=${encodeURIComponent(msg)}`;
+
                         html += `<tr>
-                            <td class="hora">${c.hora}</td>
-                            <td>${c.cliente}</td>
-                            <td>${c.servicio || 'S/D'}</td>
-                            <td><b style="color:var(--success)">${c.codigo || '----'}</b></td>
-                            <td><button class="btn btn-del" onclick="askDelete('${fecha}','${h}')">Eliminar</button></td>
-                        </tr>`;
+                    <td><b>${c.hora}</b></td>
+                    <td>${c.cliente}</td>
+                    <td>${c.servicio}</td>
+                    <td>
+                    <a href="${linkWs}" target="_blank" class="btn btn-ws">WhatsApp</a>
+                    </td>
+                    <td>
+                    <button class="btn btn-del" onclick="askDeleteReserva('${fecha}', '${h}')">Borrar</button>
+                    </td>
+                    </tr>`;
                     });
-                    cont.innerHTML += html + '</table>';
+                    cont.innerHTML += html + `</tbody></table>`;
                 });
             });
         }
 
-        // Guardar Precios
-        document.getElementById('btnSavePrices').onclick = () => {
-            set(ref(db, 'configuracion/precios'), {
-                pelo: document.getElementById('pPelo').value,
-                barba: document.getElementById('pBarba').value,
-                promo: document.getElementById('pPromo').value
-            }).then(() => alert("¡Precios actualizados en la web!"));
-        };
+        // ====================================================================
+        // FUNCIÓN MODIFICADA: LIMPIAR CITAS (Blindada contra errores)
+        // ====================================================================
+        function limpiarCitasViejas(data) {
+            try {
+                const ahora = new Date();
 
-        // Borrar Citas
-        let refToDelete = null;
-        window.askDelete = (f, h) => {
-            refToDelete = ref(db, `reservas/${f}/${h}`);
+                Object.keys(data).forEach(fecha => {
+                    const citasDia = data[fecha];
+                    if (!citasDia) return;
+
+                    Object.keys(citasDia).forEach(id => {
+                        const cita = citasDia[id];
+                        if (!cita || !cita.hora) return;
+
+                        // Corrección de formato (ej: 9:00 -> 09:00)
+                        let horaLimpia = cita.hora.trim();
+                        if (horaLimpia.length === 4) horaLimpia = "0" + horaLimpia;
+
+                        const fechaString = `${fecha}T${horaLimpia}`;
+                        const fCita = new Date(fechaString);
+
+                        // Si la fecha está corrupta, se ignora
+                        if (isNaN(fCita.getTime())) {
+                            console.warn("Fecha inválida ignorada:", fechaString);
+                            return;
+                        }
+
+                        // Cálculo en minutos
+                        const diferenciaMs = ahora - fCita;
+                        const minutosPasados = diferenciaMs / (1000 * 60);
+
+                        // --- CONFIGURACIÓN DE TIEMPO (MINUTOS) ---
+                        // Cambia este 15 por el tiempo que quieras.
+                        const tiempoLimite = 5;
+                        // ------------------------------------------
+
+                        if (minutosPasados > tiempoLimite) {
+                            remove(ref(db, `reservas/${fecha}/${id}`));
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error("Error al limpiar citas viejas:", error);
+            }
+        }
+        // ====================================================================
+
+        // --- SISTEMA DE ELIMINACIÓN GENÉRICO ---
+        let pathToDelete = null;
+
+        window.askDeleteReserva = (fecha, horaKey) => {
+            pathToDelete = ref(db, `reservas/${fecha}/${horaKey}`);
+            document.getElementById('modalTitle').innerText = "¿Eliminar Cita?";
             document.getElementById('modalConfirm').style.display = 'flex';
         };
-        window.closeModal = () => document.getElementById('modalConfirm').style.display = 'none';
 
-        document.getElementById('confirmYes').onclick = () => {
-            remove(refToDelete).then(() => {
-                closeModal();
-            });
+        window.askDeleteBlock = (fecha, key) => {
+            if (key === 'todo_el_dia') {
+                pathToDelete = ref(db, `bloqueos/${fecha}`);
+            } else {
+                pathToDelete = ref(db, `bloqueos/${fecha}/${key}`);
+            }
+            document.getElementById('modalTitle').innerText = "¿Quitar Bloqueo?";
+            document.getElementById('modalConfirm').style.display = 'flex';
+        }
+
+        window.closeModal = () => { document.getElementById('modalConfirm').style.display = 'none'; pathToDelete = null; };
+
+        document.getElementById('confirmarAccionBtn').onclick = () => {
+            if (pathToDelete) remove(pathToDelete).then(() => closeModal());
         };
+
+        function mostrarToast(mensaje) {
+            const x = document.getElementById("toast");
+            x.innerText = mensaje;
+            x.className = "show";
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
     </script>
 </body>
 
